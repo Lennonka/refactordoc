@@ -7,6 +7,7 @@ It follows convetions of Red Hat modular documentation and the newdoc tool.
 For example:
 
 ```
+cd ~
 git clone git@github.com:Lennonka/refactordoc.git
 cd ~/bin
 ln -s ~/refactordoc/refactordoc.sh refactordoc

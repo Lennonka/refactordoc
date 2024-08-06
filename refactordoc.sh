@@ -7,8 +7,9 @@ usage() {
     echo "Refactors a module or assembly by doing the following:"
     echo
     echo "* renames the file according to the given title and prefix"
-    echo "* replaces the AsciiDoc identifier on the first line of the file"
+    echo "* replaces the AsciiDoc ID on the first line of the file"
     echo "* replaces the old title with the new title inside the file"
+    echo "* finds and replaces all occurences of titles and IDs in other .adoc files"
     echo
     echo "Prefixes:"
     echo "  -c    Use 'con_' prefix for concept module"

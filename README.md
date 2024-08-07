@@ -9,7 +9,7 @@ and the [newdoc](https://github.com/redhat-documentation/newdoc) tool.
 
 * The script cannot change the module type.
 * The script can only rename a file in the same directory.
-* The script ignores and removes `_{context}`.
+* The script ignores and removes `_{context}` from the ID, but keeps it in references.
 
 ## Installation
 

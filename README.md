@@ -5,6 +5,13 @@ It follows conventions of
 [Red Hat modular documentation](https://redhat-documentation.github.io/modular-docs/)
 and the [newdoc](https://github.com/redhat-documentation/newdoc) tool.
 
+Refactoring a module or assembly means that the script:
+
+* renames the file according to the given title and prefix,
+* replaces the AsciiDoc ID on the first line of the file,
+* replaces the old title with the new title on the second line of the file,
+* finds and replaces all references of the changed title and ID in other `.adoc` files.
+
 ## Limitations
 
 * The script only works when the title and filename match precisely. It will work when the ID does not match.

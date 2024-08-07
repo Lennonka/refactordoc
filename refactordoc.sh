@@ -58,7 +58,7 @@ while [[ "$#" -gt 0 ]]; do
         *)
             echo "Error: Invalid argument '$1'"
             usage
-            exit 1
+            exit 2
             ;;
     esac
 done
@@ -72,13 +72,13 @@ case "$prefix_arg" in
     *)
         echo "Error: Invalid prefix argument."
         usage
-        exit 1
+        exit 3
         ;;
 esac
 
 # Convert module titles to filenames with prefix and .adoc suffix
-old_filename="${prefix}$(echo "$old_module_title" | tr '[:upper:]' '[:lower:]' | tr ' ' '-').adoc"
-new_filename="${prefix}$(echo "$new_module_title" | tr '[:upper:]' '[:lower:]' | tr ' ' '-').adoc"
+old_filename="${prefix}$(echo "$old_module_title" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed -E 's/[\{\}]//g').adoc"
+new_filename="${prefix}$(echo "$new_module_title" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed -E 's/[\{\}]//g').adoc"
 
 # Prepend target path if provided
 if [[ -n "$target_path" ]]; then
@@ -92,7 +92,7 @@ fi
 # Check if the old file exists
 if [[ ! -f "$old_filepath" ]]; then
     echo "Error: File '$old_filepath' does not exist."
-    exit 1
+    exit 4
 fi
 
 # Rename the file
@@ -103,20 +103,21 @@ if [[ $? -eq 0 ]]; then
     echo "File renamed successfully from '$old_filepath' to '$new_filepath'."
 else
     echo "Error: Failed to rename file."
-    exit 1
+    exit 5
 fi
 
 # Refactor the AsciiDoc identifier on the first line
-old_id='[^\"]+'
+old_id=`head -1 "$new_filepath" | sed -E 's/\[id=\"([^"]+)\"\]/\1/' | sed -E 's/(\{)/\\\{/g' | sed -E 's/(\})/\\\}/g'`
+echo "Old ID: '$old_id'"
 new_id=$(echo "$new_module_title" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
-sed -i -E "1s/\[id=\"$old_id\"\]/\[id=\"$new_id\"\]/" "$new_filepath"
+sed -i -E "1s/$old_id/$new_id/" "$new_filepath"
 
 # Check if the AsciiDoc identifier replacement was successful
 if [[ $? -eq 0 ]]; then
     echo "AsciiDoc identifier refactored successfully on the first line of '$new_filepath'."
 else
     echo "Error: Failed to refactor AsciiDoc identifier on the first line of the file."
-    exit 1
+    exit 6
 fi
 
 # Refactor the module title inside the file
@@ -127,21 +128,28 @@ if [[ $? -eq 0 ]]; then
     echo "Module title refactored successfully inside '$new_filepath'."
 else
     echo "Error: Failed to refactor module title inside the file."
-    exit 1
+    exit 7
 fi
 
 # Replace module titles and IDs in all '.adoc' files if not inhibited
 if [[ "$inhibit_replacement" == false ]]; then
+    echo "Attempting to refactor references in '.adoc' files starting from the current dir..."
     find . -type f -name '*.adoc' | while read -r file; do
-        sed -i "s/$old_module_title/$new_module_title/g" "$file"
-        sed -i "1s/$old_id/$new_id/" "$file"
+        sed -i -E "s/xref:$old_id\[/xref:$new_id\[/g" "$file" # xrefs
+	[ $? -eq 0 ] || ( echo "E: Trouble refactoring xrefs" && exit 81 )
+        sed -i -E "s/DocURL\}$old_id\[/DocURL\}$new_id\[/g" "$file" # external links
+	[ $? -eq 0 ] || ( echo "E: Trouble refactoring external links" && exit 82 )
+        sed -i -E "s/\[$old_module_title\]/\[$new_module_title\]/g" "$file" # link titles
+	[ $? -eq 0 ] || ( echo "E: Trouble refactoring ext. link titles" && exit 83 )
+	sed -i -E "s/$old_filename/$new_filename/g" "$file" # inclusions
+	[ $? -eq 0 ] || ( echo "E: Trouble refactoring inclusions" && exit 84 )
     done
 
     if [[ $? -eq 0 ]]; then
-        echo "Module titles and IDs refactored successfully in all '.adoc' files starting from the current directory."
+        echo "Module references refactored successfully in all '.adoc' files."
     else
-        echo "Error: Failed to refactor module titles and IDs in some files."
-        exit 1
+        echo "Error: Failed to refactor module references in some files."
+        exit 8
     fi
 else
     echo "Inhibition of replacement in all '.adoc' files is active. Skipping file updates."

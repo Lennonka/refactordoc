@@ -8,7 +8,7 @@ usage() {
     echo
     echo "* renames the file according to the given title and prefix"
     echo "* replaces the AsciiDoc ID on the first line of the file"
-    echo "* replaces the old title with the new title inside the file"
+    echo "* replaces the old title with the new title on the second line of the file"
     echo "* finds and replaces all occurences of titles and IDs in other .adoc files"
     echo
     echo "Prefixes:"
@@ -120,7 +120,7 @@ else
 fi
 
 # Refactor the module title inside the file
-sed -i "s/$old_module_title/$new_module_title/g" "$new_filepath"
+sed -i -E "2s/^= $old_module_title$/= $new_module_title/" "$new_filepath"
 
 # Check if the sed operation was successful
 if [[ $? -eq 0 ]]; then

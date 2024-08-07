@@ -1,6 +1,6 @@
 # refactordoc
 
-The refactordoc tool refactors assemblies and modules in AsciiDoc.
+The _refactordoc_ script refactors assemblies and modules in AsciiDoc.
 It follows conventions of
 [Red Hat modular documentation](https://redhat-documentation.github.io/modular-docs/)
 and the [newdoc](https://github.com/redhat-documentation/newdoc) tool.

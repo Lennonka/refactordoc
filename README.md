@@ -28,16 +28,17 @@ ln -s ~/refactordoc/refactordoc.sh refactordoc
 For example:
 
 ```
-$ refactordoc -p "Registering a host" "Registering a host by using global registration" \
--T guides/common/modules
+$ cd guides/
+$ refactordoc -p "Registering a host" "Registering a host by using global registration" -T common/modules
 
-File renamed successfully from 'guides/common/modules/proc_registering-a-host.adoc' 
-to 'guides/common/modules/proc_registering-a-host-by-using-global-registration.adoc'.
-AsciiDoc identifier refactored successfully on the first line 
-of 'guides/common/modules/proc_registering-a-host-by-using-global-registration.adoc'.
-Module title refactored successfully 
-inside 'guides/common/modules/proc_registering-a-host-by-using-global-registration.adoc'.
-Module titles and IDs refactored successfully in all '.adoc' files starting from the current directory.
+File renamed successfully from 'common/modules/proc_registering-a-host.adoc'
+ to 'common/modules/proc_registering-a-host-by-using-global-registration.adoc'.
+Module ID refactored successfully on the first line
+ of 'common/modules/proc_registering-a-host-by-using-global-registration.adoc'.
+Module title refactored successfully on the second line
+ of 'common/modules/proc_registering-a-host-by-using-global-registration.adoc'.
+Attempting to refactor references in '.adoc' files starting from the current dir...
+Module references refactored successfully in all '.adoc' files.
 ```
 
 See `refactordoc --help`.

@@ -29,7 +29,8 @@ For example:
 
 ```
 $ cd guides/
-$ refactordoc -p "Registering a host" "Registering a host by using global registration" -T common/modules
+$ refactordoc -p "Registering a host" "Registering a host by using global registration" \
+-T common/modules
 
 File renamed successfully from 'common/modules/proc_registering-a-host.adoc'
  to 'common/modules/proc_registering-a-host-by-using-global-registration.adoc'.

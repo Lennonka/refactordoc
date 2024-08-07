@@ -7,8 +7,8 @@ and the [newdoc](https://github.com/redhat-documentation/newdoc) tool.
 
 ## Limitations
 
-* The script will only work when the title heading and the filename match precisely, excluding brackets `{}`. It will work when the ID does not match.
-* The script cannot detect any context variables. The `project-` and `smart-proxy-` contexts will make it fail because the naming isn't compatible. It does work with trailing `_{context}`, but the suffix is removed upon refactoring.
+* The script will only work when the title heading and the filename match precisely and don't contain brackets `{}`. It will work when the ID does not match.
+* The script does not work with attributes in the input titles. Attributes will make it fail. It does work with trailing `_{context}` in the ID, but the suffix is removed upon refactoring.
 * The script can only rename a file in the same directory.
 * The script cannot change the module type.
 

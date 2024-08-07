@@ -7,9 +7,10 @@ and the [newdoc](https://github.com/redhat-documentation/newdoc) tool.
 
 ## Limitations
 
-* The script cannot change the module type.
+* The script will only work when the title heading and the filename match precisely, excluding brackets `{}`. It will work when the ID does not match.
+* The script cannot detect any context variables, such as `{context}` or `{project-context}`. It removes them, but cannot add them.
 * The script can only rename a file in the same directory.
-* The script cannot detect any context variables, such as `{context}` or `{project-context}`
+* The script cannot change the module type.
 
 ## Installation
 

@@ -138,17 +138,17 @@ if [[ "$inhibit_replacement" == false ]]; then
     echo "Attempting to refactor references in '.adoc' files starting from the current dir..."
     find . -type f -name '*.adoc' | while read -r file; do
         sed -i -E "s/xref:$old_id\[/xref:$new_id\[/g" "$file" # xrefs
-	[ $? -eq 0 ] || ( echo "E: Trouble refactoring xrefs" && exit 81 )
+	[ $? -eq 0 ] || echo "W: Trouble refactoring xrefs in $file"
         sed -i -E "s/DocURL\}$old_id\[/DocURL\}$new_id\[/g" "$file" # external links
-	[ $? -eq 0 ] || ( echo "E: Trouble refactoring external links" && exit 82 )
+	[ $? -eq 0 ] || echo "W: Trouble refactoring external links in $file"
         sed -i -E "s/\[$old_module_title\]/\[$new_module_title\]/g" "$file" # link titles
-	[ $? -eq 0 ] || ( echo "E: Trouble refactoring ext. link titles" && exit 83 )
+	[ $? -eq 0 ] || echo "W: Trouble refactoring ext. link titles $file"
 	sed -i -E "s/$old_filename/$new_filename/g" "$file" # inclusions
-	[ $? -eq 0 ] || ( echo "E: Trouble refactoring inclusions" && exit 84 )
+	[ $? -eq 0 ] || echo "W: Trouble refactoring inclusions in $file"
     done
 
     if [[ $? -eq 0 ]]; then
-        echo "Module references refactored successfully in all '.adoc' files."
+        echo "Module references refactored successfully in '.adoc' files."
     fi
 else
     echo "Inhibition of replacement in all '.adoc' files is active. Skipping file updates."

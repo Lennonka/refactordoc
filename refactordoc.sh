@@ -107,28 +107,30 @@ else
 fi
 
 # Refactor the AsciiDoc identifier on the first line
-old_id=`head -1 "$new_filepath" | sed -E 's/\[id=\"([^"]+)\"\]/\1/' | sed -E 's/(\{)/\\\{/g' | sed -E 's/(\})/\\\}/g'`
-#echo "Old ID: '$old_id'"
-new_id=$(echo "$new_module_title" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
-sed -i -E "1s/$old_id/$new_id/" "$new_filepath"
+if grep -s -E '\[id=\"([^"]+)\"\]' "$new_filepath"; then
+	old_id=`head -1 "$new_filepath" | sed -E 's/\[id=\"([^"]+)\"\]/\1/' | sed -E 's/(\{)/\\\{/g' | sed -E 's/(\})/\\\}/g'`
+	#echo "Old ID: '$old_id'"
+	new_id=$(echo "$new_module_title" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+	sed -i -E "1s/$old_id/$new_id/" "$new_filepath"
 
-# Check if the AsciiDoc identifier replacement was successful
-if [[ $? -eq 0 ]]; then
-    echo "Module ID refactored successfully on the first line of '$new_filepath'."
-else
-    echo "Error: Failed to refactor module ID on the first line."
-    exit 6
+	# Check if the AsciiDoc identifier replacement was successful
+	if [[ $? -eq 0 ]]; then
+	    echo "Module ID refactored successfully on the first line of '$new_filepath'."
+	else
+	    echo "W: Failed to refactor module ID on the first line."
+	fi
 fi
 
 # Refactor the module title inside the file
-sed -i -E "2s/^= $old_module_title$/= $new_module_title/" "$new_filepath"
+if grep -s -E '^= $old_module_title$' "$new_filepath"; then
+	sed -i -E "2s/^= $old_module_title$/= $new_module_title/" "$new_filepath"
 
-# Check if the sed operation was successful
-if [[ $? -eq 0 ]]; then
-    echo "Module title refactored successfully on the second line of '$new_filepath'."
-else
-    echo "Error: Failed to refactor module title on the second line."
-    exit 7
+	# Check if the sed operation was successful
+	if [[ $? -eq 0 ]]; then
+	    echo "Module title refactored successfully on the second line of '$new_filepath'."
+	else
+	    echo "W: Failed to refactor module title on the second line."
+	fi
 fi
 
 # Replace module titles and IDs in all '.adoc' files if not inhibited

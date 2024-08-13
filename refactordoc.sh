@@ -122,8 +122,8 @@ if grep -s -E '\[id=\"([^"]+)\"\]' "$new_filepath"; then
 fi
 
 # Refactor the module title inside the file
-if grep -s -E '^= $old_module_title$' "$new_filepath"; then
-	sed -i -E "2s/^= $old_module_title$/= $new_module_title/" "$new_filepath"
+if grep -s -E '^=' "$new_filepath"; then
+	sed -i -E "2s/^=.*/= $new_module_title/" "$new_filepath"
 
 	# Check if the sed operation was successful
 	if [[ $? -eq 0 ]]; then
